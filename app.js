@@ -146,6 +146,7 @@ function showScreen(name) {
   Object.entries(screens).forEach(([key, el]) => el.classList.toggle("hidden", key !== name));
   document.body.classList.toggle("quiz-active", name === "quiz");
   document.querySelectorAll("[data-view]").forEach(btn => btn.classList.toggle("active", btn.dataset.view === name || (name === "result" && btn.dataset.view === "progress")));
+  if (name === "home") updateLearningSummary();
   if (name === "progress") renderDashboard();
   if (name === "sheets") renderStudySheets();
   window.scrollTo({top:0, behavior:"smooth"});
