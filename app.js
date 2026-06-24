@@ -94,10 +94,32 @@ const questions = [
 ];
 
 const categoryNames = {SHIS:"Direction · SHIS", ETRTO:"Roues · ETRTO", "Pédalier":"Pédalier", VAE:"VAE", "Électricité":"Électricité", "Serrage":"Couples de serrage", "Pneus":"Pneus", "Transmission":"Transmission", "Freinage":"Freinage", "Roues":"Roues & rayonnage", "Atelier":"Atelier"};
+const studySheets = [
+  {category:"SHIS", icon:"🧭", title:"Direction & SHIS", subtitle:"Lire les interfaces sans ambiguïté", bullets:["Le code décrit le type de coupelle, le logement du cadre et le pivot de fourche.","EC est externe, ZS affleure le cadre et IS utilise un logement directement usiné.","Un pivot 1\"1/8 mesure 28,6 mm ; un pivot 1\"1/2 mesure 38,1 mm.","Toujours identifier séparément les parties haute et basse du jeu de direction."]},
+  {category:"ETRTO", icon:"◎", title:"Dimensions ETRTO", subtitle:"La référence fiable pneu-jante", bullets:["Dans 37-622, 37 est la largeur du pneu et 622 le diamètre de siège de jante.","700C et 29 pouces peuvent partager le même BSD de 622 mm.","L'appellation commerciale en pouces ne garantit pas la compatibilité.","Largeur du pneu et largeur intérieure de jante doivent aussi être cohérentes."]},
+  {category:"Pédalier", icon:"⚙", title:"Pédalier & boîtier", subtitle:"Axes, plateaux et interfaces", bullets:["Le pédalier transforme l'effort musculaire en rotation transmise à la chaîne.","Hollowtech II intègre l'axe à la manivelle droite ; DUB utilise un axe de 28,99 mm.","Le BSA est fileté, tandis que BB86, BB92 ou PF30 sont montés par pression.","La pédale gauche possède un filetage inversé."]},
+  {category:"VAE", icon:"🔋", title:"Vélo électrique", subtitle:"Moteur, batterie et entretien", bullets:["Un VAE européen standard assiste au pédalage jusqu'à 25 km/h et 250 W continus.","L'énergie disponible s'exprime en Wh : tension multipliée par capacité en Ah.","Le capteur de couple offre une assistance progressive liée à l'effort du cycliste.","Pour un stockage prolongé, conserver idéalement la batterie entre 50 et 80 %."]},
+  {category:"Électricité", icon:"ϟ", title:"Électricité VAE", subtitle:"Les grandeurs à connaître", bullets:["Puissance : P = U × I. Énergie : E = U × capacité en Ah.","Une batterie 36 V / 14 Ah stocke environ 504 Wh.","Le contrôleur transforme le courant continu pour alimenter un moteur BLDC.","Le BMS protège les cellules contre surcharge, décharge profonde et température."]},
+  {category:"Serrage", icon:"🔧", title:"Couples de serrage", subtitle:"Serrer juste, jamais au hasard", bullets:["La valeur indiquée par le fabricant prime toujours sur une valeur générique.","Les pédales se situent couramment autour de 35 à 40 N·m.","Les six vis d'un rotor demandent un faible couple, souvent 2 à 4 N·m.","Le carbone exige une clé dynamométrique, un couple réduit et une pâte adaptée."]},
+  {category:"Pneus", icon:"◉", title:"Technologie du pneu", subtitle:"Structure, montage et usure", bullets:["Un pneu réunit carcasse, tringles et bande de roulement.","Le Tubeless permet de réduire la pression et supprime le pincement de chambre.","Le fond de jante protège la chambre des têtes de rayons et des perçages.","Un pneu doit être remplacé lorsque la protection ou les fils de carcasse apparaissent."]},
+  {category:"Transmission", icon:"⛓", title:"Transmission", subtitle:"Braquets, chaîne et réglages", bullets:["Braquet = dents du plateau ÷ dents du pignon.","Développement = braquet × circonférence de roue.","Une chaîne hésitant à monter demande généralement davantage de tension de câble.","Un moyeu à vitesses intégrées permet de changer de rapport à l'arrêt."]},
+  {category:"Freinage", icon:"◉", title:"Freinage", subtitle:"Mécanique et hydraulique", bullets:["Le freinage transforme l'énergie du vélo en chaleur par frottement.","Un circuit hydraulique transmet l'effort par une colonne de liquide.","Ne jamais mélanger liquide minéral et liquide DOT ; suivre la marque du frein.","Un patin sur jante doit porter entièrement et peut être légèrement pincé pour éviter le bruit."]},
+  {category:"Roues", icon:"☼", title:"Roues & rayonnage", subtitle:"Tension, centrage et défauts", bullets:["Les rayons maintiennent le moyeu centré et transmettent les efforts à la jante.","Le croisement par trois est le montage classique le plus courant.","Le voile est un défaut latéral ; le saut est un défaut de concentricité.","Une tension régulière se contrôle au tensiomètre et limite les ruptures."]},
+  {category:"Atelier", icon:"🧰", title:"Pratique d'atelier", subtitle:"Contrôle, mesure et matériaux", bullets:["Le pied à coulisse mesure cotes extérieures et intérieures ; le micromètre contrôle un disque.","La graisse reste dans les assemblages ; l'huile convient aux pièces mobiles comme la chaîne.","L'orientation des fibres détermine une grande partie du comportement d'une pièce carbone.","Un contrôle complet vérifie cadre, roues, pneus, freins, transmission et poste de pilotage."]}
+];
+const visualQuestions = new Map([
+  ["Que décrit le code ETRTO 37-622 ?", "etrto"],
+  ["Dans le code ZS44/28.6, que signifie « ZS » ?", "headset"],
+  ["Quel est le rôle principal du pédalier ?", "drivetrain"],
+  ["Comment l'effort du levier atteint-il les plaquettes dans un frein hydraulique ?", "hydraulic"],
+  ["Comment corriger un patin qui grince tout en restant bien aligné sur la jante ?", "brakepad"],
+  ["Quelle différence distingue le voile du saut d'une roue ?", "wheel"],
+]);
 const $ = (id) => document.getElementById(id);
-const screens = {home:$("screen-home"), quiz:$("screen-quiz"), result:$("screen-result")};
-const defaultSettings = {display:"auto", largeText:false, reducedMotion:false};
+const screens = {home:$("screen-home"), progress:$("screen-progress"), sheets:$("screen-sheets"), quiz:$("screen-quiz"), result:$("screen-result")};
+const defaultSettings = {display:"auto", largeText:false, reducedMotion:false, darkTheme:false};
 let settings = readSettings();
+let learning = readLearning();
 let selectedCategory = "Toutes";
 let selectedCount = 20;
 let round = [];
@@ -108,6 +130,8 @@ let streak = 0;
 let topStreak = 0;
 let answered = false;
 let missed = [];
+let sessionRecorded = false;
+let deferredInstallPrompt = null;
 
 function shuffle(items) {
   const copy = [...items];
@@ -120,6 +144,10 @@ function shuffle(items) {
 
 function showScreen(name) {
   Object.entries(screens).forEach(([key, el]) => el.classList.toggle("hidden", key !== name));
+  document.body.classList.toggle("quiz-active", name === "quiz");
+  document.querySelectorAll("[data-view]").forEach(btn => btn.classList.toggle("active", btn.dataset.view === name || (name === "result" && btn.dataset.view === "progress")));
+  if (name === "progress") renderDashboard();
+  if (name === "sheets") renderStudySheets();
   window.scrollTo({top:0, behavior:"smooth"});
 }
 
@@ -142,9 +170,10 @@ function updateAvailability() {
 }
 
 function begin(customRound = null) {
-  round = customRound ? shuffle(customRound) : shuffle(availableQuestions()).slice(0, Math.min(selectedCount, availableQuestions().length));
+  round = customRound ? shuffle(customRound) : smartSelect(availableQuestions(), Math.min(selectedCount, availableQuestions().length));
   index = score = correct = streak = topStreak = 0;
   missed = [];
+  sessionRecorded = false;
   showScreen("quiz");
   renderQuestion();
 }
@@ -158,6 +187,7 @@ function renderQuestion() {
   $("question-icon").textContent = item.icon;
   $("difficulty").textContent = item.level;
   $("question-text").textContent = item.q;
+  renderQuestionVisual(item);
   $("score").textContent = score.toLocaleString("fr-FR");
   $("streak").textContent = streak;
   $("feedback").classList.add("hidden");
@@ -182,6 +212,7 @@ function selectAnswer(button, choice) {
   answered = true;
   const item = round[index];
   const isCorrect = choice === item.answer;
+  recordAnswer(item, isCorrect);
   document.querySelectorAll(".answer-btn").forEach(btn => {
     btn.disabled = true;
     if (btn.dataset.choice === item.answer) btn.classList.add("correct");
@@ -223,6 +254,10 @@ function showResults() {
   const best = Math.max(readBestScore(), score);
   try { localStorage.setItem("veloquiz-best", String(best)); } catch (_) { /* Le quiz reste utilisable si le stockage local est bloqué. */ }
   updateBestScore();
+  if (!sessionRecorded) {
+    recordSession({correct, total:round.length, score});
+    sessionRecorded = true;
+  }
   let title, message, emoji;
   if (percent >= 90) { title = "Maître mécano !"; message = "Tu connais le guide sur le bout de la clé dynamométrique."; emoji = "🏆"; }
   else if (percent >= 70) { title = "Belle mécanique !"; message = "Les bases sont solides. Quelques tours de clé et ce sera parfait."; emoji = "🚲"; }
@@ -238,7 +273,52 @@ function showResults() {
   $("best-streak").textContent = topStreak;
   $("retry-missed-btn").disabled = missed.length === 0;
   $("retry-missed-btn").textContent = missed.length ? `Revoir mes erreurs (${missed.length})` : "Aucune erreur !";
+  updateLearningSummary();
   showScreen("result");
+}
+
+function smartSelect(pool, count) {
+  const now = Date.now();
+  return [...pool]
+    .map(item => {
+      const progress = learning.questions[questionKey(item)];
+      let priority = 2;
+      if (progress && progress.dueAt <= now) priority = 0;
+      else if (!progress) priority = 1;
+      else priority = 2 + progress.box;
+      return {item, rank:priority + Math.random() * .7};
+    })
+    .sort((a, b) => a.rank - b.rank)
+    .slice(0, count)
+    .map(entry => entry.item);
+}
+
+function questionKey(item) {
+  return `${item.category}::${item.q}`;
+}
+
+function renderQuestionVisual(item) {
+  const container = $("question-visual");
+  const type = visualQuestions.get(item.q);
+  if (!type) {
+    container.innerHTML = "";
+    container.classList.add("hidden");
+    return;
+  }
+  container.innerHTML = illustrationFor(type);
+  container.classList.remove("hidden");
+}
+
+function illustrationFor(type) {
+  const visuals = {
+    etrto:`<svg viewBox="0 0 520 180" role="img" aria-label="Schéma d'un code ETRTO"><circle class="diagram-soft" cx="390" cy="90" r="62"/><circle class="diagram-line" cx="390" cy="90" r="46"/><path class="diagram-line" d="M344 90h92M390 44v92"/><path class="diagram-line" d="M78 55h118M78 124h118"/><text x="82" y="42">LARGEUR DU PNEU</text><text x="112" y="96" style="font-size:30px">37</text><text x="248" y="96" style="font-size:28px">—</text><text x="356" y="96" style="font-size:25px">622</text><text x="315" y="165">DIAMÈTRE DE SIÈGE</text></svg>`,
+    headset:`<svg viewBox="0 0 520 180" role="img" aria-label="Schéma d'un jeu de direction Zero Stack"><path class="diagram-soft" d="M190 20h140l-25 140h-90z"/><path class="diagram-line" d="M250 5v170M205 50h90M215 126h70"/><path class="diagram-accent" d="M205 44h90v12h-90zM215 120h70v12h-70z"/><path class="diagram-line" d="M160 50h-54M360 50h54"/><text x="25" y="55">COUPELLE</text><text x="370" y="55">AFFLEURANTE</text><text x="222" y="98" style="font-size:25px">ZS</text></svg>`,
+    drivetrain:`<svg viewBox="0 0 520 180" role="img" aria-label="Schéma de transmission par chaîne"><circle class="diagram-soft" cx="150" cy="90" r="56"/><circle class="diagram-line" cx="150" cy="90" r="42"/><circle class="diagram-soft" cx="395" cy="90" r="34"/><circle class="diagram-line" cx="395" cy="90" r="24"/><path class="diagram-line" d="M155 48 397 66M155 132l242-18"/><path class="diagram-line" d="m130 90 20-20 20 20-20 20zM382 90h26"/><path class="diagram-accent" d="m255 70 30 20-30 20z"/><text x="92" y="170">PÉDALIER</text><text x="358" y="151">CASSETTE</text></svg>`,
+    hydraulic:`<svg viewBox="0 0 520 180" role="img" aria-label="Schéma d'un frein hydraulique"><path class="diagram-line" d="M30 54h95l25 32-44 18"/><circle class="diagram-accent" cx="133" cy="79" r="10"/><path class="diagram-line" d="M143 79c85-45 150 68 240 8"/><path class="diagram-soft" d="M384 45h92v91h-92z"/><path class="diagram-accent" d="M402 64h14v54h-14zM444 64h14v54h-14z"/><path class="diagram-line" d="M430 37v107"/><path class="diagram-line" d="m245 51 22 8-18 14M320 92l22 8-18 14"/><text x="28" y="133">LEVIER</text><text x="210" y="30">LIQUIDE SOUS PRESSION</text><text x="386" y="160">ÉTRIER</text></svg>`,
+    brakepad:`<svg viewBox="0 0 520 180" role="img" aria-label="Schéma de réglage d'un patin sur jante"><path class="diagram-soft" d="M60 30h400v78H60z"/><path class="diagram-line" d="M60 61h400M60 82h400"/><path class="diagram-accent" d="m195 92 126-8 4 33-126 8z"/><path class="diagram-line" d="m180 141 24-18M340 137l-20-20"/><text x="114" y="159">AVANT : TOUCHE EN PREMIER</text><text x="190" y="50">PISTE DE FREINAGE</text></svg>`,
+    wheel:`<svg viewBox="0 0 520 180" role="img" aria-label="Comparaison du voile et du saut d'une roue"><ellipse class="diagram-line" cx="145" cy="88" rx="68" ry="58"/><path class="diagram-soft" d="M145 30c30 10 52 29 68 58-25 27-45 48-68 58-28-10-52-29-68-58 24-29 45-48 68-58z"/><path class="diagram-line" d="M145 30v116M77 88h136"/><ellipse class="diagram-line" cx="380" cy="88" rx="55" ry="68"/><circle class="diagram-soft" cx="380" cy="88" r="58"/><path class="diagram-line" d="M380 30v116M322 88h116"/><text x="122" y="175">VOILE</text><text x="361" y="175">SAUT</text></svg>`
+  };
+  return visuals[type] || "";
 }
 
 function updateBestScore() {
@@ -251,13 +331,130 @@ function readBestScore() {
   catch (_) { return 0; }
 }
 
+function readLearning() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("veloquiz-learning-v2") || "{}");
+    return {questions:saved.questions || {}, sessions:Array.isArray(saved.sessions) ? saved.sessions : []};
+  } catch (_) {
+    return {questions:{}, sessions:[]};
+  }
+}
+
+function saveLearning() {
+  try { localStorage.setItem("veloquiz-learning-v2", JSON.stringify(learning)); }
+  catch (_) { /* La progression reste disponible pendant la session. */ }
+}
+
+function recordAnswer(item, isCorrect) {
+  const key = questionKey(item);
+  const previous = learning.questions[key] || {attempts:0, correct:0, box:1, dueAt:0};
+  const box = isCorrect ? Math.min(5, previous.box + 1) : 1;
+  const intervals = [0, 0, 1, 3, 7, 14];
+  learning.questions[key] = {
+    attempts:previous.attempts + 1,
+    correct:previous.correct + (isCorrect ? 1 : 0),
+    box,
+    dueAt:Date.now() + intervals[box] * 86400000,
+    lastAt:Date.now()
+  };
+  saveLearning();
+}
+
+function recordSession(session) {
+  learning.sessions.unshift({...session, date:Date.now()});
+  learning.sessions = learning.sessions.slice(0, 12);
+  saveLearning();
+}
+
+function learningStats() {
+  const entries = Object.values(learning.questions);
+  const attempts = entries.reduce((sum, entry) => sum + entry.attempts, 0);
+  const correctAnswers = entries.reduce((sum, entry) => sum + entry.correct, 0);
+  const mastered = entries.filter(entry => entry.box >= 4).length;
+  const due = entries.filter(entry => entry.dueAt <= Date.now() && entry.box < 4).length;
+  return {attempts, correctAnswers, mastered, due, success:attempts ? Math.round(correctAnswers / attempts * 100) : 0};
+}
+
+function updateLearningSummary() {
+  const stats = learningStats();
+  const mastery = Math.round(stats.mastered / questions.length * 100);
+  $("home-mastery").textContent = `${mastery}%`;
+  $("home-mastery-gauge").style.setProperty("--mastery", `${mastery * 3.6}deg`);
+  $("home-learning-text").textContent = stats.attempts
+    ? `${stats.mastered} questions maîtrisées · ${stats.due} à consolider. La prochaine sélection s'adapte à tes résultats.`
+    : "Commence un quiz pour mesurer ta progression.";
+}
+
+function renderDashboard() {
+  const stats = learningStats();
+  $("dash-success").textContent = `${stats.success}%`;
+  $("dash-answered").textContent = stats.attempts.toLocaleString("fr-FR");
+  $("dash-mastered").textContent = `${stats.mastered}/${questions.length}`;
+  $("dash-due").textContent = stats.due;
+  const themeContainer = $("theme-progress");
+  themeContainer.innerHTML = "";
+  Object.keys(categoryNames).forEach(category => {
+    const categoryQuestions = questions.filter(item => item.category === category);
+    const records = categoryQuestions.map(item => learning.questions[questionKey(item)]).filter(Boolean);
+    const attempts = records.reduce((sum, entry) => sum + entry.attempts, 0);
+    const correctAnswers = records.reduce((sum, entry) => sum + entry.correct, 0);
+    const percent = attempts ? Math.round(correctAnswers / attempts * 100) : 0;
+    const row = document.createElement("div");
+    row.className = "theme-row";
+    row.innerHTML = `<div class="theme-row-header"><strong></strong><span>${percent}%</span></div><div class="theme-bar"><span style="width:${percent}%"></span></div>`;
+    row.querySelector("strong").textContent = categoryNames[category];
+    themeContainer.appendChild(row);
+  });
+  const recent = $("recent-sessions");
+  recent.innerHTML = "";
+  if (!learning.sessions.length) {
+    recent.innerHTML = '<div class="empty-state">Tes résultats apparaîtront ici après ton premier quiz.</div>';
+  } else {
+    learning.sessions.slice(0, 6).forEach(session => {
+      const row = document.createElement("div");
+      row.className = "session-row";
+      row.innerHTML = `<span>${new Date(session.date).toLocaleDateString("fr-FR", {day:"2-digit", month:"short"})}</span><strong>${Math.round(session.correct / session.total * 100)}%</strong>`;
+      recent.appendChild(row);
+    });
+  }
+}
+
+function renderStudySheets() {
+  const container = $("study-sheets");
+  if (container.childElementCount) return;
+  studySheets.forEach(sheet => {
+    const details = document.createElement("details");
+    details.className = "study-card";
+    details.innerHTML = `<summary><span class="sheet-icon"></span><span><strong></strong><small></small></span><span class="sheet-toggle">+</span></summary><div class="sheet-body"><ul></ul></div>`;
+    details.querySelector(".sheet-icon").textContent = sheet.icon;
+    details.querySelector("summary strong").textContent = sheet.title;
+    details.querySelector("summary small").textContent = sheet.subtitle;
+    const list = details.querySelector("ul");
+    sheet.bullets.forEach(text => {
+      const li = document.createElement("li");
+      li.textContent = text;
+      list.appendChild(li);
+    });
+    container.appendChild(details);
+  });
+}
+
+function resetLearning() {
+  if (!window.confirm("Effacer toute la progression enregistrée sur cet appareil ?")) return;
+  learning = {questions:{}, sessions:[]};
+  saveLearning();
+  updateLearningSummary();
+  renderDashboard();
+}
+
 function readSettings() {
   try {
     const saved = JSON.parse(localStorage.getItem("veloquiz-settings") || "{}");
     return {
       display: ["auto", "phone", "desktop"].includes(saved.display) ? saved.display : defaultSettings.display,
       largeText: Boolean(saved.largeText),
-      reducedMotion: Boolean(saved.reducedMotion)
+      reducedMotion: Boolean(saved.reducedMotion),
+      darkTheme: Boolean(saved.darkTheme)
     };
   } catch (_) {
     return {...defaultSettings};
@@ -274,11 +471,14 @@ function applySettings() {
   root.dataset.display = settings.display;
   root.dataset.text = settings.largeText ? "large" : "normal";
   root.dataset.motion = settings.reducedMotion ? "reduced" : "normal";
+  root.dataset.theme = settings.darkTheme ? "dark" : "light";
+  document.querySelector('meta[name="theme-color"]').content = settings.darkTheme ? "#0f1d1b" : "#176b58";
   const viewport = document.querySelector('meta[name="viewport"]');
   viewport.content = settings.display === "desktop" ? "width=1100" : "width=device-width, initial-scale=1";
   document.querySelectorAll('input[name="display-mode"]').forEach(input => { input.checked = input.value === settings.display; });
   $("large-text-setting").checked = settings.largeText;
   $("reduced-motion-setting").checked = settings.reducedMotion;
+  $("dark-theme-setting").checked = settings.darkTheme;
 }
 
 function initializeSettings() {
@@ -301,6 +501,41 @@ function initializeSettings() {
     applySettings();
     saveSettings();
   });
+  $("dark-theme-setting").addEventListener("change", event => {
+    settings.darkTheme = event.target.checked;
+    applySettings();
+    saveSettings();
+  });
+}
+
+function initializeInstall() {
+  const button = $("install-btn");
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  if (isStandalone) return;
+  window.addEventListener("beforeinstallprompt", event => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    button.classList.remove("hidden");
+  });
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (isIOS) button.classList.remove("hidden");
+  button.addEventListener("click", async () => {
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      button.classList.add("hidden");
+    } else {
+      $("install-dialog").showModal();
+    }
+  });
+  window.addEventListener("appinstalled", () => button.classList.add("hidden"));
+}
+
+function initializeServiceWorker() {
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js").catch(() => {}));
+  }
 }
 
 document.querySelectorAll("[data-category]").forEach(btn => btn.addEventListener("click", () => {
@@ -313,11 +548,13 @@ document.querySelectorAll("[data-count]").forEach(btn => btn.addEventListener("c
   selectedCount = Number(btn.dataset.count);
   document.querySelectorAll("[data-count]").forEach(b => b.classList.toggle("selected", b === btn));
 }));
+document.querySelectorAll("[data-view]").forEach(btn => btn.addEventListener("click", () => showScreen(btn.dataset.view)));
 $("start-btn").addEventListener("click", () => begin());
 $("next-btn").addEventListener("click", nextQuestion);
 $("quit-btn").addEventListener("click", () => showScreen("home"));
 $("restart-btn").addEventListener("click", () => showScreen("home"));
 $("retry-missed-btn").addEventListener("click", () => { if (missed.length) begin([...missed]); });
+$("reset-progress-btn").addEventListener("click", resetLearning);
 document.querySelector(".brand").addEventListener("click", event => { event.preventDefault(); showScreen("home"); });
 document.addEventListener("keydown", event => {
   if (!screens.quiz.classList.contains("hidden")) {
@@ -327,5 +564,8 @@ document.addEventListener("keydown", event => {
 });
 
 initializeSettings();
+initializeInstall();
+initializeServiceWorker();
 updateBestScore();
 updateAvailability();
+updateLearningSummary();

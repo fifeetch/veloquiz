@@ -4,7 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Quiz interactif pour réviser le Guide Technique Vélo.">
+  <meta name="theme-color" content="#176b58">
   <title>VéloQuiz — Révise la mécanique vélo</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -17,11 +21,17 @@
         <span>Vélo<span>Quiz</span></span>
       </a>
       <div class="header-actions">
-        <span class="version-badge">v1.1</span>
+        <nav class="main-nav" aria-label="Navigation principale">
+          <button class="nav-btn active" type="button" data-view="home"><span aria-hidden="true">⌂</span><span>Quiz</span></button>
+          <button class="nav-btn" type="button" data-view="progress"><span aria-hidden="true">▥</span><span>Progression</span></button>
+          <button class="nav-btn" type="button" data-view="sheets"><span aria-hidden="true">▤</span><span>Fiches</span></button>
+        </nav>
+        <span class="version-badge">v2.0</span>
         <div class="best-score" title="Meilleur score enregistré sur cet appareil">
           <span aria-hidden="true">🏆</span>
           <span>Record <strong id="best-score">—</strong></span>
         </div>
+        <button id="install-btn" class="install-btn hidden" type="button"><span aria-hidden="true">↓</span><span>Installer</span></button>
         <button id="settings-btn" class="settings-btn" type="button" aria-label="Ouvrir les paramètres" title="Paramètres">
           <span aria-hidden="true">⚙</span><span class="settings-label">Paramètres</span>
         </button>
@@ -34,6 +44,11 @@
           <p class="eyebrow">Le petit atelier des neurones</p>
           <h1 id="home-title">La mécanique vélo,<br><em>ça se travaille.</em></h1>
           <p class="intro">Teste tes connaissances, apprends de tes erreurs et deviens incollable sur ton vélo.</p>
+
+          <div class="learning-summary" aria-label="Résumé de progression">
+            <div class="learning-gauge" id="home-mastery-gauge"><strong id="home-mastery">0%</strong></div>
+            <div><strong>Révision intelligente</strong><span id="home-learning-text">Commence un quiz pour mesurer ta progression.</span></div>
+          </div>
 
           <div class="setup-card">
             <fieldset>
@@ -83,6 +98,38 @@
         </aside>
       </section>
 
+      <section id="screen-progress" class="screen dashboard-screen hidden" aria-labelledby="progress-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">Ton atelier personnel</p><h1 id="progress-title">Progression</h1></div>
+          <button id="reset-progress-btn" class="text-btn" type="button">Réinitialiser les données</button>
+        </div>
+        <div class="dashboard-stats">
+          <article><span class="stat-icon">✓</span><strong id="dash-success">0%</strong><small>Réussite globale</small></article>
+          <article><span class="stat-icon">◫</span><strong id="dash-answered">0</strong><small>Réponses données</small></article>
+          <article><span class="stat-icon">◆</span><strong id="dash-mastered">0/80</strong><small>Questions maîtrisées</small></article>
+          <article><span class="stat-icon">↻</span><strong id="dash-due">0</strong><small>À consolider</small></article>
+        </div>
+        <div class="dashboard-grid">
+          <article class="dashboard-panel">
+            <div class="panel-heading"><div><span>Vue d’ensemble</span><h2>Maîtrise par thème</h2></div><span class="legend-dot">Réussite</span></div>
+            <div id="theme-progress" class="theme-progress"></div>
+          </article>
+          <article class="dashboard-panel recent-panel">
+            <div class="panel-heading"><div><span>Historique local</span><h2>Dernières sessions</h2></div></div>
+            <div id="recent-sessions" class="recent-sessions"></div>
+          </article>
+        </div>
+        <div class="privacy-note"><span aria-hidden="true">⌁</span><p><strong>Privé par conception.</strong> Toute ta progression reste uniquement dans ce navigateur.</p></div>
+      </section>
+
+      <section id="screen-sheets" class="screen sheets-screen hidden" aria-labelledby="sheets-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">L’essentiel en un coup d’œil</p><h1 id="sheets-title">Fiches de cours</h1></div>
+          <p>Onze mémos courts pour réviser avant de lancer le quiz.</p>
+        </div>
+        <div id="study-sheets" class="study-sheets"></div>
+      </section>
+
       <section id="screen-quiz" class="screen quiz-screen hidden" aria-labelledby="question-text">
         <div class="quiz-header">
           <button id="quit-btn" class="ghost-btn" type="button" aria-label="Quitter la partie">← Quitter</button>
@@ -94,6 +141,7 @@
         <article class="question-card">
           <div class="question-meta"><span id="question-icon" class="question-icon">🧭</span><span id="difficulty" class="difficulty">Fondamentaux</span></div>
           <h2 id="question-text"></h2>
+          <div id="question-visual" class="question-visual hidden" aria-hidden="true"></div>
           <div id="answers" class="answers" role="group" aria-label="Choix de réponse"></div>
           <div id="feedback" class="feedback hidden" aria-live="polite">
             <div id="feedback-title" class="feedback-title"></div>
@@ -128,7 +176,7 @@
       <form method="dialog">
         <div class="dialog-header">
           <div>
-            <p class="eyebrow">VéloQuiz v1.1</p>
+            <p class="eyebrow">VéloQuiz v2.0</p>
             <h2 id="settings-title">Paramètres</h2>
           </div>
           <button class="dialog-close" value="close" aria-label="Fermer les paramètres">×</button>
@@ -163,10 +211,22 @@
             <span><strong>Limiter les animations</strong><small>Réduit les mouvements de l’interface</small></span>
             <input id="reduced-motion-setting" type="checkbox" role="switch"><span class="switch"></span>
           </label>
+          <label class="switch-row">
+            <span><strong>Thème sombre</strong><small>Adapte les couleurs pour une faible luminosité</small></span>
+            <input id="dark-theme-setting" type="checkbox" role="switch"><span class="switch"></span>
+          </label>
         </fieldset>
 
         <button class="primary-btn dialog-done" value="close">Terminé</button>
         <p class="settings-note">Les réglages sont enregistrés uniquement sur cet appareil.</p>
+      </form>
+    </dialog>
+
+    <dialog id="install-dialog" class="settings-dialog install-dialog" aria-labelledby="install-title">
+      <form method="dialog">
+        <div class="dialog-header"><div><p class="eyebrow">Installation</p><h2 id="install-title">Garde VéloQuiz sous la main</h2></div><button class="dialog-close" value="close" aria-label="Fermer">×</button></div>
+        <div class="install-steps"><span>1</span><p>Ouvre le menu <strong>Partager</strong> de ton navigateur.</p><span>2</span><p>Choisis <strong>Sur l’écran d’accueil</strong>.</p><span>3</span><p>Lance ensuite VéloQuiz comme une application.</p></div>
+        <button class="primary-btn dialog-done" value="close">J’ai compris</button>
       </form>
     </dialog>
 

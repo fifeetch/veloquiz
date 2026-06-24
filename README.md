@@ -11,5 +11,9 @@ Une petite application de révision ludique créée à partir du *Guide Techniqu
 - interface adaptée aux ordinateurs et téléphones
 - paramètres d’affichage automatique, téléphone ou ordinateur
 - options de texte agrandi et d’animations limitées
+- installation sur téléphone ou ordinateur et fonctionnement hors ligne (PWA)
+- progression locale, statistiques par thème et répétition intelligente
+- onze fiches de cours synthétiques
+- questions illustrées et thème sombre
 
 L’application fonctionne entièrement dans le navigateur, sans installation.
