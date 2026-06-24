@@ -349,7 +349,10 @@ function renderQuestion() {
   $("question-icon").textContent = item.icon;
   $("difficulty").textContent = item.level;
   $("question-text").textContent = item.q;
-  renderQuestionVisual(item);
+  const visual = $("question-visual");
+  visual.innerHTML = "";
+  visual.classList.add("hidden");
+  visual.setAttribute("aria-hidden", "true");
   $("score").textContent = score.toLocaleString("fr-FR");
   $("streak").textContent = streak;
   $("feedback").classList.add("hidden");
@@ -399,6 +402,7 @@ function selectAnswer(button, choice) {
   $("streak").textContent = streak;
   $("feedback-text").textContent = item.why;
   $("feedback").classList.remove("hidden");
+  renderQuestionVisual(item);
   $("next-btn").textContent = index === round.length - 1 ? "Voir mes résultats →" : "Question suivante →";
   $("next-btn").classList.remove("hidden");
 }
@@ -465,10 +469,12 @@ function renderQuestionVisual(item) {
   if (!type) {
     container.innerHTML = "";
     container.classList.add("hidden");
+    container.setAttribute("aria-hidden", "true");
     return;
   }
   container.innerHTML = illustrationFor(type);
   container.classList.remove("hidden");
+  container.setAttribute("aria-hidden", "false");
 }
 
 function illustrationFor(type) {

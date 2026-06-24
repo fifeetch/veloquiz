@@ -141,6 +141,7 @@ legend { margin-bottom: 11px; font-size: 13px; font-weight: 800; }
 .difficulty { color: var(--green); background: #e7f0e9; border-radius: 999px; padding: 6px 10px; font-size: 10px; font-weight: 850; text-transform: uppercase; letter-spacing: .05em; }
 .question-card h2 { max-width: 720px; margin: 0 0 28px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(27px, 4vw, 39px); line-height: 1.18; letter-spacing: -.7px; }
 .question-visual { min-height: 180px; margin: -8px 0 25px; padding: 16px; display: grid; place-items: center; overflow: hidden; color: var(--green-dark); background: linear-gradient(145deg, #eef3e7, #f8f2df); border: 1px solid #d9e1ce; border-radius: 17px; }
+.question-visual.result-visual { margin: 14px 0 0; }
 .question-visual svg { width: min(100%, 520px); height: 175px; overflow: visible; }
 .question-visual .diagram-line { fill: none; stroke: currentColor; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
 .question-visual .diagram-accent { fill: var(--orange); stroke: var(--orange); }

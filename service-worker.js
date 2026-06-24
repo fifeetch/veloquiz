@@ -1,9 +1,9 @@
-const CACHE_NAME = "veloquiz-v2.1";
+const CACHE_NAME = "veloquiz-v2.1.1";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=2.1",
-  "./app.js?v=2.1",
+  "./styles.css?v=2.1.1",
+  "./app.js?v=2.1.1",
   "./manifest.webmanifest",
   "./icon.svg"
 ];

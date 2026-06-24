@@ -9,7 +9,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="styles.css?v=2.1">
+  <link rel="stylesheet" href="styles.css?v=2.1.1">
 </head>
 <body>
   <div class="page-shell">
@@ -26,7 +26,7 @@
           <button class="nav-btn" type="button" data-view="progress"><span aria-hidden="true">▥</span><span>Progression</span></button>
           <button class="nav-btn" type="button" data-view="sheets"><span aria-hidden="true">▤</span><span>Fiches</span></button>
         </nav>
-        <span class="version-badge">v2.1</span>
+        <span class="version-badge">v2.1.1</span>
         <div class="best-score" title="Meilleur score enregistré sur cet appareil">
           <span aria-hidden="true">🏆</span>
           <span>Record <strong id="best-score">—</strong></span>
@@ -142,12 +142,12 @@
         <article class="question-card">
           <div class="question-meta"><span id="question-icon" class="question-icon">🧭</span><span id="difficulty" class="difficulty">Fondamentaux</span></div>
           <h2 id="question-text"></h2>
-          <div id="question-visual" class="question-visual hidden" aria-hidden="true"></div>
           <div id="answers" class="answers" role="group" aria-label="Choix de réponse"></div>
           <div id="feedback" class="feedback hidden" aria-live="polite">
             <div id="feedback-title" class="feedback-title"></div>
             <p id="feedback-text"></p>
           </div>
+          <div id="question-visual" class="question-visual result-visual hidden" aria-hidden="true"></div>
           <button id="next-btn" class="primary-btn next-btn hidden" type="button">Question suivante <span aria-hidden="true">→</span></button>
         </article>
         <p class="keyboard-hint">Raccourcis : touches <kbd>1</kbd> à <kbd>4</kbd>, puis <kbd>Entrée</kbd></p>
@@ -177,7 +177,7 @@
       <form method="dialog">
         <div class="dialog-header">
           <div>
-            <p class="eyebrow">VéloQuiz v2.1</p>
+            <p class="eyebrow">VéloQuiz v2.1.1</p>
             <h2 id="settings-title">Paramètres</h2>
           </div>
           <button class="dialog-close" value="close" aria-label="Fermer les paramètres">×</button>
@@ -233,7 +233,7 @@
 
     <footer>Quiz créé à partir du <em>Guide Technique Vélo — Synthèse technique 2025</em>.</footer>
   </div>
-  <script src="app.js?v=2.1"></script>
+  <script src="app.js?v=2.1.1"></script>
 </body>
 </html>
 
