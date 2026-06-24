@@ -37,8 +37,13 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--orange); outlin
 .brand > span:last-child > span { color: var(--green); }
 .brand-mark { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; color: var(--paper); background: var(--green); transform: rotate(-3deg); }
 .brand-mark svg { width: 31px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.header-actions { display: flex; align-items: center; gap: 9px; }
+.version-badge { color: var(--green-dark); background: var(--lime); border-radius: 999px; padding: 5px 8px; font-size: 10px; font-weight: 900; }
 .best-score { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; background: rgba(255,255,255,.55); border: 1px solid rgba(17,42,45,.1); border-radius: 999px; padding: 9px 14px; }
 .best-score strong { color: var(--ink); }
+.settings-btn { min-height: 38px; display: flex; align-items: center; gap: 7px; color: var(--green-dark); background: rgba(255,255,255,.7); border: 1px solid rgba(17,42,45,.14); border-radius: 999px; padding: 8px 13px; cursor: pointer; font-size: 12px; font-weight: 800; transition: transform .15s, background .15s; }
+.settings-btn:hover { background: white; transform: translateY(-1px); }
+.settings-btn > span:first-child { font-size: 17px; line-height: 1; }
 main { flex: 1; }
 .screen { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
 .hidden { display: none !important; }
@@ -159,6 +164,42 @@ kbd { padding: 2px 5px; background: #e6e3da; border: 1px solid #d2cfc6; border-b
 .secondary-btn { color: var(--green-dark); background: transparent; border: 1px solid var(--green); }
 .secondary-btn:hover { background: #e7f0e9; }
 .secondary-btn:disabled { opacity: .4; cursor: not-allowed; }
+.settings-dialog { width: min(560px, calc(100% - 28px)); max-height: calc(100vh - 28px); padding: 0; color: var(--ink); background: var(--card); border: 0; border-radius: 22px; box-shadow: 0 28px 90px rgba(8, 32, 28, .3); }
+.settings-dialog::backdrop { background: rgba(10, 31, 28, .62); backdrop-filter: blur(4px); }
+.settings-dialog form { padding: clamp(24px, 5vw, 38px); }
+.dialog-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 28px; }
+.dialog-header .eyebrow { margin-bottom: 5px; }
+.dialog-header h2 { margin: 0; font-family: Georgia, serif; font-size: 38px; letter-spacing: -1px; }
+.dialog-close { width: 38px; height: 38px; flex: 0 0 38px; color: var(--muted); background: #efede5; border: 0; border-radius: 50%; cursor: pointer; font-size: 26px; line-height: 1; }
+.settings-group { margin-bottom: 26px; }
+.settings-group legend { margin-bottom: 5px; font-size: 15px; }
+.settings-group > p { margin: 0 0 13px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.display-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.display-options label { position: relative; min-height: 112px; padding: 14px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; text-align: center; background: white; border: 1px solid var(--line); border-radius: 14px; cursor: pointer; }
+.display-options label:has(input:checked) { background: #e7f0e9; border-color: var(--green); box-shadow: inset 0 0 0 1px var(--green); }
+.display-options input { position: absolute; opacity: 0; pointer-events: none; }
+.display-options input:focus-visible + .option-icon { outline: 3px solid var(--orange); outline-offset: 3px; }
+.option-icon { height: 25px; color: var(--green); font-size: 25px; line-height: 1; }
+.display-options strong, .display-options small { display: block; }
+.display-options strong { font-size: 12px; }
+.display-options small { margin-top: 2px; color: var(--muted); font-size: 9px; }
+.radio-mark { position: absolute; top: 8px; right: 8px; width: 17px; height: 17px; display: grid; place-items: center; border: 1px solid #b8c1bd; border-radius: 50%; }
+.display-options input:checked ~ .radio-mark { background: var(--green); border-color: var(--green); box-shadow: inset 0 0 0 4px #e7f0e9; }
+.compact-settings { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; }
+.compact-settings legend { margin: 0 0 8px 12px; padding: 0 6px; }
+.switch-row { min-height: 66px; padding: 11px 14px; display: flex; align-items: center; justify-content: space-between; gap: 18px; cursor: pointer; }
+.switch-row + .switch-row { border-top: 1px solid var(--line); }
+.switch-row strong, .switch-row small { display: block; }
+.switch-row strong { font-size: 12px; }
+.switch-row small { margin-top: 3px; color: var(--muted); font-size: 10px; }
+.switch-row input { position: absolute; opacity: 0; }
+.switch { position: relative; width: 42px; height: 24px; flex: 0 0 42px; background: #c9cdc7; border-radius: 999px; transition: background .2s; }
+.switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; background: white; border-radius: 50%; box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform .2s; }
+.switch-row input:checked + .switch { background: var(--green); }
+.switch-row input:checked + .switch::after { transform: translateX(18px); }
+.switch-row input:focus-visible + .switch { outline: 3px solid var(--orange); outline-offset: 3px; }
+.dialog-done { width: 100%; }
+.settings-note { margin: 10px 0 0; color: #89918f; text-align: center; font-size: 9px; }
 footer { width: min(1180px, calc(100% - 40px)); margin: auto auto 0; padding: 24px 0; color: #87908e; text-align: center; border-top: 1px solid rgba(17,42,45,.1); font-size: 11px; }
 
 @media (max-width: 900px) {
@@ -173,6 +214,8 @@ footer { width: min(1180px, calc(100% - 40px)); margin: auto auto 0; padding: 24
   .topbar { padding: 18px 0; }
   .best-score span:nth-child(2) { font-size: 0; }
   .best-score strong { font-size: 13px; }
+  .version-badge, .settings-label { display: none; }
+  .settings-btn { width: 38px; justify-content: center; padding: 0; }
   .home-screen { padding-top: 15px; }
   .hero-visual { min-height: 350px; border-radius: 30% 30% 16px 16px; }
   .bike-art { width: 120%; }
@@ -193,7 +236,60 @@ footer { width: min(1180px, calc(100% - 40px)); margin: auto auto 0; padding: 24
   .keyboard-hint { display: none; }
   .result-actions { grid-template-columns: 1fr; }
   .result-stats span { min-height: 24px; }
+  .display-options { grid-template-columns: 1fr; }
+  .display-options label { min-height: 66px; padding: 10px 34px 10px 12px; flex-direction: row; justify-content: flex-start; text-align: left; }
+  .option-icon { width: 31px; text-align: center; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }
+
+html[data-text="large"] { font-size: 112%; }
+html[data-text="large"] .intro,
+html[data-text="large"] .result-message { font-size: 1.05rem; }
+html[data-text="large"] .category-card strong,
+html[data-text="large"] .quiz-progress-copy strong,
+html[data-text="large"] .answer-btn { font-size: .88rem; }
+html[data-text="large"] .category-card small,
+html[data-text="large"] .quiz-progress-copy span,
+html[data-text="large"] .feedback p { font-size: .76rem; }
+html[data-text="large"] .question-card h2 { font-size: clamp(2rem, 4.3vw, 2.65rem); }
+html[data-motion="reduced"] *, html[data-motion="reduced"] *::before, html[data-motion="reduced"] *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+
+/* Le mode téléphone permet aussi de prévisualiser l'application compacte sur ordinateur. */
+html[data-display="phone"] body { background: #dfe3dc; }
+html[data-display="phone"] .page-shell { width: min(100%, 460px); margin: 0 auto; background: var(--paper); box-shadow: 0 0 60px rgba(17,42,45,.12); }
+html[data-display="phone"] .topbar,
+html[data-display="phone"] .screen,
+html[data-display="phone"] footer { width: calc(100% - 24px); }
+html[data-display="phone"] .topbar { padding: 18px 0; }
+html[data-display="phone"] .version-badge,
+html[data-display="phone"] .settings-label { display: none; }
+html[data-display="phone"] .best-score span:nth-child(2) { font-size: 0; }
+html[data-display="phone"] .best-score strong { font-size: 13px; }
+html[data-display="phone"] .settings-btn { width: 38px; justify-content: center; padding: 0; }
+html[data-display="phone"] .home-screen { min-height: auto; grid-template-columns: 1fr; gap: 24px; padding-top: 18px; }
+html[data-display="phone"] .hero-visual { display: none; }
+html[data-display="phone"] .hero-copy { text-align: center; }
+html[data-display="phone"] h1 { font-size: 48px; letter-spacing: -2px; }
+html[data-display="phone"] .intro { font-size: 16px; }
+html[data-display="phone"] fieldset,
+html[data-display="phone"] .category-card { text-align: left; }
+html[data-display="phone"] .category-grid { grid-template-columns: 1fr; }
+html[data-display="phone"] .category-card:first-child { grid-column: auto; }
+html[data-display="phone"] .quiz-header { grid-template-columns: auto 1fr; }
+html[data-display="phone"] .quiz-progress-copy { text-align: right; }
+html[data-display="phone"] .live-stats { grid-column: 1 / -1; justify-self: stretch; justify-content: flex-end; }
+html[data-display="phone"] .question-card { padding: 25px 18px; }
+html[data-display="phone"] .question-card h2 { font-size: 28px; }
+html[data-display="phone"] .keyboard-hint { display: none; }
+html[data-display="phone"] .result-actions { grid-template-columns: 1fr; }
+
+/* Le mode ordinateur fixe un canevas large, même depuis un téléphone. */
+html[data-display="desktop"] body { min-width: 980px; }
+html[data-display="desktop"] .home-screen { grid-template-columns: minmax(0, 1.08fr) minmax(380px, .92fr); gap: 70px; }
+html[data-display="desktop"] .hero-visual { display: block; order: initial; min-height: 570px; }
+html[data-display="desktop"] .hero-copy { text-align: left; }
+html[data-display="desktop"] .intro { margin-left: 0; }
+html[data-display="desktop"] .category-grid { grid-template-columns: repeat(2, 1fr); }
+html[data-display="desktop"] .category-card:first-child { grid-column: 1 / -1; }

@@ -16,9 +16,15 @@
         </span>
         <span>Vélo<span>Quiz</span></span>
       </a>
-      <div class="best-score" title="Meilleur score enregistré sur cet appareil">
-        <span aria-hidden="true">🏆</span>
-        <span>Record <strong id="best-score">—</strong></span>
+      <div class="header-actions">
+        <span class="version-badge">v1.1</span>
+        <div class="best-score" title="Meilleur score enregistré sur cet appareil">
+          <span aria-hidden="true">🏆</span>
+          <span>Record <strong id="best-score">—</strong></span>
+        </div>
+        <button id="settings-btn" class="settings-btn" type="button" aria-label="Ouvrir les paramètres" title="Paramètres">
+          <span aria-hidden="true">⚙</span><span class="settings-label">Paramètres</span>
+        </button>
       </div>
     </header>
 
@@ -112,6 +118,52 @@
         </div>
       </section>
     </main>
+
+    <dialog id="settings-dialog" class="settings-dialog" aria-labelledby="settings-title">
+      <form method="dialog">
+        <div class="dialog-header">
+          <div>
+            <p class="eyebrow">VéloQuiz v1.1</p>
+            <h2 id="settings-title">Paramètres</h2>
+          </div>
+          <button class="dialog-close" value="close" aria-label="Fermer les paramètres">×</button>
+        </div>
+
+        <fieldset class="settings-group">
+          <legend>Type d’affichage</legend>
+          <p>Adapte la mise en page à ton écran ou force une présentation précise.</p>
+          <div class="display-options">
+            <label>
+              <input type="radio" name="display-mode" value="auto" checked>
+              <span class="option-icon">◐</span><span><strong>Automatique</strong><small>S’adapte à l’appareil</small></span><span class="radio-mark"></span>
+            </label>
+            <label>
+              <input type="radio" name="display-mode" value="phone">
+              <span class="option-icon">▯</span><span><strong>Téléphone</strong><small>Affichage compact</small></span><span class="radio-mark"></span>
+            </label>
+            <label>
+              <input type="radio" name="display-mode" value="desktop">
+              <span class="option-icon">▰</span><span><strong>Ordinateur</strong><small>Affichage large</small></span><span class="radio-mark"></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="settings-group compact-settings">
+          <legend>Confort de lecture</legend>
+          <label class="switch-row">
+            <span><strong>Texte agrandi</strong><small>Augmente la taille des textes du quiz</small></span>
+            <input id="large-text-setting" type="checkbox" role="switch"><span class="switch"></span>
+          </label>
+          <label class="switch-row">
+            <span><strong>Limiter les animations</strong><small>Réduit les mouvements de l’interface</small></span>
+            <input id="reduced-motion-setting" type="checkbox" role="switch"><span class="switch"></span>
+          </label>
+        </fieldset>
+
+        <button class="primary-btn dialog-done" value="close">Terminé</button>
+        <p class="settings-note">Les réglages sont enregistrés uniquement sur cet appareil.</p>
+      </form>
+    </dialog>
 
     <footer>Quiz créé à partir du <em>Guide Technique Vélo — Synthèse technique 2025</em>.</footer>
   </div>

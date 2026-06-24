@@ -51,6 +51,8 @@ const questions = [
 const categoryNames = {SHIS:"Direction · SHIS", ETRTO:"Roues · ETRTO", "Pédalier":"Pédalier", VAE:"VAE", "Électricité":"Électricité", "Serrage":"Couples de serrage"};
 const $ = (id) => document.getElementById(id);
 const screens = {home:$("screen-home"), quiz:$("screen-quiz"), result:$("screen-result")};
+const defaultSettings = {display:"auto", largeText:false, reducedMotion:false};
+let settings = readSettings();
 let selectedCategory = "Toutes";
 let selectedCount = 20;
 let round = [];
@@ -205,6 +207,58 @@ function readBestScore() {
   catch (_) { return 0; }
 }
 
+function readSettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("veloquiz-settings") || "{}");
+    return {
+      display: ["auto", "phone", "desktop"].includes(saved.display) ? saved.display : defaultSettings.display,
+      largeText: Boolean(saved.largeText),
+      reducedMotion: Boolean(saved.reducedMotion)
+    };
+  } catch (_) {
+    return {...defaultSettings};
+  }
+}
+
+function saveSettings() {
+  try { localStorage.setItem("veloquiz-settings", JSON.stringify(settings)); }
+  catch (_) { /* Les paramètres restent actifs pour la session si le stockage est bloqué. */ }
+}
+
+function applySettings() {
+  const root = document.documentElement;
+  root.dataset.display = settings.display;
+  root.dataset.text = settings.largeText ? "large" : "normal";
+  root.dataset.motion = settings.reducedMotion ? "reduced" : "normal";
+  const viewport = document.querySelector('meta[name="viewport"]');
+  viewport.content = settings.display === "desktop" ? "width=1100" : "width=device-width, initial-scale=1";
+  document.querySelectorAll('input[name="display-mode"]').forEach(input => { input.checked = input.value === settings.display; });
+  $("large-text-setting").checked = settings.largeText;
+  $("reduced-motion-setting").checked = settings.reducedMotion;
+}
+
+function initializeSettings() {
+  applySettings();
+  const dialog = $("settings-dialog");
+  $("settings-btn").addEventListener("click", () => dialog.showModal());
+  dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); });
+  document.querySelectorAll('input[name="display-mode"]').forEach(input => input.addEventListener("change", () => {
+    settings.display = input.value;
+    applySettings();
+    saveSettings();
+  }));
+  $("large-text-setting").addEventListener("change", event => {
+    settings.largeText = event.target.checked;
+    applySettings();
+    saveSettings();
+  });
+  $("reduced-motion-setting").addEventListener("change", event => {
+    settings.reducedMotion = event.target.checked;
+    applySettings();
+    saveSettings();
+  });
+}
+
 document.querySelectorAll("[data-category]").forEach(btn => btn.addEventListener("click", () => {
   selectedCategory = btn.dataset.category;
   document.querySelectorAll("[data-category]").forEach(b => b.classList.toggle("selected", b === btn));
@@ -228,5 +282,6 @@ document.addEventListener("keydown", event => {
   }
 });
 
+initializeSettings();
 updateBestScore();
 updateAvailability();

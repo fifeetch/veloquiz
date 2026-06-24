@@ -9,5 +9,7 @@ Une petite application de révision ludique créée à partir du *Guide Techniqu
 - explications et références au guide après chaque réponse
 - score, séries, record local et révision des erreurs
 - interface adaptée aux ordinateurs et téléphones
+- paramètres d’affichage automatique, téléphone ou ordinateur
+- options de texte agrandi et d’animations limitées
 
 L’application fonctionne entièrement dans le navigateur, sans installation.
