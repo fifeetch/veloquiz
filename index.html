@@ -9,7 +9,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="styles.css?v=2.0.1">
+  <link rel="stylesheet" href="styles.css?v=2.1">
 </head>
 <body>
   <div class="page-shell">
@@ -26,7 +26,7 @@
           <button class="nav-btn" type="button" data-view="progress"><span aria-hidden="true">▥</span><span>Progression</span></button>
           <button class="nav-btn" type="button" data-view="sheets"><span aria-hidden="true">▤</span><span>Fiches</span></button>
         </nav>
-        <span class="version-badge">v2.0</span>
+        <span class="version-badge">v2.1</span>
         <div class="best-score" title="Meilleur score enregistré sur cet appareil">
           <span aria-hidden="true">🏆</span>
           <span>Record <strong id="best-score">—</strong></span>
@@ -78,11 +78,12 @@
                 <button class="selected" type="button" data-count="20">20 <small>Classique</small></button>
                 <button type="button" data-count="40">40 <small>Grand tour</small></button>
                 <button type="button" data-count="80">80 <small>Intégrale</small></button>
+                <button type="button" data-count="160">160 <small>Collection</small></button>
               </div>
             </fieldset>
 
             <button id="start-btn" class="primary-btn" type="button">Prendre le départ <span aria-hidden="true">→</span></button>
-            <p id="question-availability" class="availability">80 questions disponibles · réponses expliquées</p>
+            <p id="question-availability" class="availability">160 questions disponibles · réponses expliquées</p>
           </div>
         </div>
 
@@ -92,7 +93,7 @@
             <g class="wheel"><circle cx="128" cy="326" r="92"/><circle cx="452" cy="326" r="92"/></g>
             <g class="frame"><path d="M128 326 215 172l90 154H128Zm87-154h130l107 154M305 326l62-190M338 136h58M193 148h64"/><circle cx="305" cy="326" r="17"/><path d="m305 326 42 25M305 326l-38-26"/></g>
           </svg>
-          <div class="visual-card card-one"><span>80</span> questions</div>
+          <div class="visual-card card-one"><span>160</span> questions</div>
           <div class="visual-card card-two"><span>11</span> thèmes</div>
           <p class="visual-quote">« Un bon réglage commence par<br>une bonne connaissance. »</p>
         </aside>
@@ -176,7 +177,7 @@
       <form method="dialog">
         <div class="dialog-header">
           <div>
-            <p class="eyebrow">VéloQuiz v2.0</p>
+            <p class="eyebrow">VéloQuiz v2.1</p>
             <h2 id="settings-title">Paramètres</h2>
           </div>
           <button class="dialog-close" value="close" aria-label="Fermer les paramètres">×</button>
@@ -232,7 +233,7 @@
 
     <footer>Quiz créé à partir du <em>Guide Technique Vélo — Synthèse technique 2025</em>.</footer>
   </div>
-  <script src="app.js?v=2.0.1"></script>
+  <script src="app.js?v=2.1"></script>
 </body>
 </html>
 

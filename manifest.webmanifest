@@ -1,7 +1,7 @@
 {
   "name": "VéloQuiz — Révision technique vélo",
   "short_name": "VéloQuiz",
-  "description": "80 questions et fiches pour réviser la technique vélo.",
+  "description": "160 questions et fiches détaillées pour réviser la technique vélo.",
   "id": "./",
   "start_url": "./",
   "scope": "./",

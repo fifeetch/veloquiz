@@ -97,7 +97,7 @@ legend { margin-bottom: 11px; font-size: 13px; font-weight: 800; }
 .category-card small { margin-top: 2px; color: var(--muted); font-size: 11px; }
 .check { position: absolute; right: 13px; top: 50%; width: 19px; height: 19px; display: none; place-items: center; color: white; background: var(--green); border-radius: 50%; font-size: 11px; transform: translateY(-50%); }
 .category-card.selected .check { display: grid; }
-.length-picker { display: grid; grid-template-columns: repeat(4, 1fr); padding: 4px; background: #e9e5dc; border-radius: 14px; }
+.length-picker { display: grid; grid-template-columns: repeat(5, 1fr); padding: 4px; background: #e9e5dc; border-radius: 14px; }
 .length-picker button { padding: 9px 10px; color: var(--muted); background: transparent; border: 0; border-radius: 10px; cursor: pointer; font-weight: 800; }
 .length-picker button small { display: block; margin-top: 2px; font-size: 10px; font-weight: 600; }
 .length-picker button.selected { color: var(--green-dark); background: var(--card); box-shadow: 0 2px 8px rgba(20,48,43,.08); }
@@ -261,18 +261,22 @@ kbd { padding: 2px 5px; background: #e6e3da; border: 1px solid #d2cfc6; border-b
 .privacy-note > span { color: var(--green); font-size: 22px; }
 .privacy-note p { margin: 0; font-size: 10px; }
 
-.study-sheets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.study-sheets { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; align-items: start; }
 .study-card { overflow: hidden; background: var(--card); border: 1px solid var(--line); border-radius: 17px; box-shadow: 0 10px 30px rgba(20,48,43,.05); }
+.study-card[open] { grid-column: 1 / -1; }
 .study-card summary { min-height: 118px; padding: 19px; display: grid; grid-template-columns: 42px 1fr 22px; align-items: center; gap: 12px; cursor: pointer; list-style: none; }
 .study-card summary::-webkit-details-marker { display: none; }
 .sheet-icon { width: 42px; height: 42px; display: grid; place-items: center; color: var(--green-dark); background: #e7f0e9; border-radius: 12px; font-size: 20px; }
-.study-card summary strong, .study-card summary small { display: block; }
+.study-card summary strong, .study-card summary small, .study-card summary em { display: block; }
 .study-card summary strong { font-family: Georgia, serif; font-size: 18px; }
 .study-card summary small { margin-top: 4px; color: var(--muted); font-size: 9px; line-height: 1.4; }
+.study-card summary em { width: fit-content; margin-top: 8px; padding: 3px 7px; color: var(--green-dark); background: #e7f0e9; border-radius: 99px; font-size: 8px; font-style: normal; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
 .sheet-toggle { color: var(--green); font-size: 21px; transition: transform .2s; }
 .study-card[open] .sheet-toggle { transform: rotate(45deg); }
-.sheet-body { padding: 0 19px 20px; border-top: 1px solid var(--line); }
-.sheet-body ul { margin: 15px 0 0; padding-left: 18px; color: var(--muted); font-size: 11px; line-height: 1.55; }
+.sheet-body { padding: 19px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; border-top: 1px solid var(--line); }
+.sheet-section { padding: 15px; background: var(--paper); border: 1px solid var(--line); border-radius: 13px; }
+.sheet-section h3 { margin: 0; color: var(--ink); font-family: Georgia, serif; font-size: 14px; }
+.sheet-body ul { margin: 11px 0 0; padding-left: 18px; color: var(--muted); font-size: 11px; line-height: 1.6; }
 .sheet-body li + li { margin-top: 7px; }
 footer { width: min(1180px, calc(100% - 40px)); margin: auto auto 0; padding: 24px 0; color: #87908e; text-align: center; border-top: 1px solid rgba(17,42,45,.1); font-size: 11px; }
 
@@ -287,6 +291,7 @@ footer { width: min(1180px, calc(100% - 40px)); margin: auto auto 0; padding: 24
   footer { padding-bottom: 85px; }
   .dashboard-grid { grid-template-columns: 1fr; }
   .study-sheets { grid-template-columns: repeat(2, 1fr); }
+  .sheet-body { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 600px) {
   .topbar, .screen, footer { width: min(100% - 24px, 1180px); }
@@ -327,6 +332,7 @@ footer { width: min(1180px, calc(100% - 40px)); margin: auto auto 0; padding: 24
   .dashboard-stats article { min-height: 115px; padding: 16px; }
   .theme-progress { grid-template-columns: 1fr; }
   .study-sheets { grid-template-columns: 1fr; }
+  .sheet-body { grid-template-columns: 1fr; padding: 13px; }
   .question-visual { min-height: 145px; }
   .question-visual svg { height: 140px; }
 }
