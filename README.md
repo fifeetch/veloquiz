@@ -4,8 +4,8 @@ Une petite application de révision ludique créée à partir du *Guide Techniqu
 
 ## Contenu
 
-- 40 questions à choix multiples
-- 6 thèmes : SHIS, ETRTO, pédalier, VAE, électricité et couples de serrage
+- 80 questions à choix multiples
+- 11 thèmes : SHIS, ETRTO, pédalier, VAE, électricité, serrage, pneus, transmission, freinage, roues et atelier
 - explications et références au guide après chaque réponse
 - score, séries, record local et révision des erreurs
 - interface adaptée aux ordinateurs et téléphones

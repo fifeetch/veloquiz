@@ -40,7 +40,7 @@
               <legend>Choisis ton terrain</legend>
               <div id="category-picker" class="category-grid">
                 <button class="category-card selected" type="button" data-category="Toutes">
-                  <span class="category-icon">⚡</span><span><strong>Tour complet</strong><small>Les 6 thèmes</small></span><span class="check">✓</span>
+                  <span class="category-icon">⚡</span><span><strong>Tour complet</strong><small>Les 11 thèmes</small></span><span class="check">✓</span>
                 </button>
                 <button class="category-card" type="button" data-category="SHIS"><span class="category-icon">🧭</span><span><strong>Direction</strong><small>Codes SHIS</small></span><span class="check">✓</span></button>
                 <button class="category-card" type="button" data-category="ETRTO"><span class="category-icon">◉</span><span><strong>Roues</strong><small>Norme ETRTO</small></span><span class="check">✓</span></button>
@@ -48,6 +48,11 @@
                 <button class="category-card" type="button" data-category="VAE"><span class="category-icon">🔋</span><span><strong>VAE</strong><small>Moteur & batterie</small></span><span class="check">✓</span></button>
                 <button class="category-card" type="button" data-category="Électricité"><span class="category-icon">ϟ</span><span><strong>Électricité</strong><small>Volts, watts & BMS</small></span><span class="check">✓</span></button>
                 <button class="category-card" type="button" data-category="Serrage"><span class="category-icon">🔧</span><span><strong>Serrage</strong><small>Couples en N·m</small></span><span class="check">✓</span></button>
+                <button class="category-card" type="button" data-category="Pneus"><span class="category-icon">◎</span><span><strong>Pneus</strong><small>Montage & technologie</small></span><span class="check">✓</span></button>
+                <button class="category-card" type="button" data-category="Transmission"><span class="category-icon">⛓</span><span><strong>Transmission</strong><small>Chaîne & braquets</small></span><span class="check">✓</span></button>
+                <button class="category-card" type="button" data-category="Freinage"><span class="category-icon">◉</span><span><strong>Freinage</strong><small>Mécanique & hydraulique</small></span><span class="check">✓</span></button>
+                <button class="category-card" type="button" data-category="Roues"><span class="category-icon">☼</span><span><strong>Roues</strong><small>Rayons & dévoilage</small></span><span class="check">✓</span></button>
+                <button class="category-card" type="button" data-category="Atelier"><span class="category-icon">🧰</span><span><strong>Atelier</strong><small>Outils, contrôle & matériaux</small></span><span class="check">✓</span></button>
               </div>
             </fieldset>
 
@@ -57,11 +62,12 @@
                 <button type="button" data-count="10">10 <small>Express</small></button>
                 <button class="selected" type="button" data-count="20">20 <small>Classique</small></button>
                 <button type="button" data-count="40">40 <small>Grand tour</small></button>
+                <button type="button" data-count="80">80 <small>Intégrale</small></button>
               </div>
             </fieldset>
 
             <button id="start-btn" class="primary-btn" type="button">Prendre le départ <span aria-hidden="true">→</span></button>
-            <p id="question-availability" class="availability">40 questions disponibles · réponses expliquées</p>
+            <p id="question-availability" class="availability">80 questions disponibles · réponses expliquées</p>
           </div>
         </div>
 
@@ -71,8 +77,8 @@
             <g class="wheel"><circle cx="128" cy="326" r="92"/><circle cx="452" cy="326" r="92"/></g>
             <g class="frame"><path d="M128 326 215 172l90 154H128Zm87-154h130l107 154M305 326l62-190M338 136h58M193 148h64"/><circle cx="305" cy="326" r="17"/><path d="m305 326 42 25M305 326l-38-26"/></g>
           </svg>
-          <div class="visual-card card-one"><span>40</span> questions</div>
-          <div class="visual-card card-two"><span>6</span> thèmes</div>
+          <div class="visual-card card-one"><span>80</span> questions</div>
+          <div class="visual-card card-two"><span>11</span> thèmes</div>
           <p class="visual-quote">« Un bon réglage commence par<br>une bonne connaissance. »</p>
         </aside>
       </section>
@@ -92,7 +98,6 @@
           <div id="feedback" class="feedback hidden" aria-live="polite">
             <div id="feedback-title" class="feedback-title"></div>
             <p id="feedback-text"></p>
-            <p id="source-ref" class="source-ref"></p>
           </div>
           <button id="next-btn" class="primary-btn next-btn hidden" type="button">Question suivante <span aria-hidden="true">→</span></button>
         </article>
