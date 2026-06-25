@@ -278,7 +278,8 @@ const visualQuestions = new Map([
 ]);
 const $ = (id) => document.getElementById(id);
 const screens = {home:$("screen-home"), progress:$("screen-progress"), sheets:$("screen-sheets"), quiz:$("screen-quiz"), result:$("screen-result")};
-const defaultSettings = {display:"auto", largeText:false, reducedMotion:false, darkTheme:false};
+const answerDifficultyLabels = {normal:"QCM standard", hard:"QCM difficile", expert:"QCM expert"};
+const defaultSettings = {display:"auto", answerDifficulty:"hard", largeText:false, reducedMotion:false, darkTheme:false};
 let settings = readSettings();
 let learning = readLearning();
 let selectedCategory = "Toutes";
@@ -301,6 +302,57 @@ function shuffle(items) {
     [copy[i], copy[j]] = [copy[j], copy[i]];
   }
   return copy;
+}
+
+function normalizedText(value) {
+  return String(value).trim().toLocaleLowerCase("fr-FR");
+}
+
+function uniqueChoices(candidates, item) {
+  const seen = new Set([normalizedText(item.answer)]);
+  return candidates.filter(choice => {
+    const key = normalizedText(choice);
+    if (!choice || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function collectDistractors(pool, item, includeChoices = true) {
+  return uniqueChoices(pool.flatMap(question => {
+    const values = [question.answer];
+    if (includeChoices) values.push(...question.choices.filter(choice => choice !== question.answer));
+    return values;
+  }), item);
+}
+
+function buildAnswerChoices(item) {
+  if (settings.answerDifficulty === "normal") return shuffle(item.choices);
+
+  const originalWrong = uniqueChoices(item.choices.filter(choice => choice !== item.answer), item);
+  const sameCategory = questions.filter(question => question !== item && question.category === item.category);
+  const sameLevel = sameCategory.filter(question => question.level === item.level);
+  const allOther = questions.filter(question => question !== item);
+  const closeDistractors = settings.answerDifficulty === "expert"
+    ? [
+        ...collectDistractors(sameLevel, item, true),
+        ...collectDistractors(sameCategory, item, true),
+        ...originalWrong,
+        ...collectDistractors(allOther, item, false)
+      ]
+    : [
+        ...collectDistractors(sameCategory, item, false),
+        ...collectDistractors(sameCategory, item, true),
+        ...originalWrong,
+        ...collectDistractors(allOther, item, false)
+      ];
+
+  const wrong = uniqueChoices(closeDistractors, item);
+  const selectedWrong = settings.answerDifficulty === "expert"
+    ? wrong.slice(0, 3)
+    : uniqueChoices([...wrong.slice(0, 2), ...originalWrong], item).slice(0, 3);
+
+  return shuffle([item.answer, ...selectedWrong].slice(0, 4));
 }
 
 function showScreen(name) {
@@ -347,7 +399,7 @@ function renderQuestion() {
   $("category-label").textContent = categoryNames[item.category];
   $("progress-bar").style.width = `${(index / round.length) * 100}%`;
   $("question-icon").textContent = item.icon;
-  $("difficulty").textContent = item.level;
+  $("difficulty").textContent = `${item.level} · ${answerDifficultyLabels[settings.answerDifficulty] || answerDifficultyLabels.hard}`;
   $("question-text").textContent = item.q;
   const visual = $("question-visual");
   visual.innerHTML = "";
@@ -360,7 +412,7 @@ function renderQuestion() {
   $("next-btn").classList.add("hidden");
   const answers = $("answers");
   answers.innerHTML = "";
-  shuffle(item.choices).forEach((choice, i) => {
+  buildAnswerChoices(item).forEach((choice, i) => {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "answer-btn";
@@ -631,6 +683,7 @@ function readSettings() {
     const saved = JSON.parse(localStorage.getItem("veloquiz-settings") || "{}");
     return {
       display: ["auto", "phone", "desktop"].includes(saved.display) ? saved.display : defaultSettings.display,
+      answerDifficulty: ["normal", "hard", "expert"].includes(saved.answerDifficulty) ? saved.answerDifficulty : defaultSettings.answerDifficulty,
       largeText: Boolean(saved.largeText),
       reducedMotion: Boolean(saved.reducedMotion),
       darkTheme: Boolean(saved.darkTheme)
@@ -655,6 +708,8 @@ function applySettings() {
   const viewport = document.querySelector('meta[name="viewport"]');
   viewport.content = settings.display === "desktop" ? "width=1100" : "width=device-width, initial-scale=1";
   document.querySelectorAll('input[name="display-mode"]').forEach(input => { input.checked = input.value === settings.display; });
+  document.querySelectorAll("[data-answer-difficulty]").forEach(button => { button.classList.toggle("selected", button.dataset.answerDifficulty === settings.answerDifficulty); });
+  document.querySelectorAll('input[name="answer-difficulty-setting"]').forEach(input => { input.checked = input.value === settings.answerDifficulty; });
   $("large-text-setting").checked = settings.largeText;
   $("reduced-motion-setting").checked = settings.reducedMotion;
   $("dark-theme-setting").checked = settings.darkTheme;
@@ -667,6 +722,11 @@ function initializeSettings() {
   dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); });
   document.querySelectorAll('input[name="display-mode"]').forEach(input => input.addEventListener("change", () => {
     settings.display = input.value;
+    applySettings();
+    saveSettings();
+  }));
+  document.querySelectorAll('input[name="answer-difficulty-setting"]').forEach(input => input.addEventListener("change", () => {
+    settings.answerDifficulty = input.value;
     applySettings();
     saveSettings();
   }));
@@ -726,6 +786,11 @@ document.querySelectorAll("[data-count]").forEach(btn => btn.addEventListener("c
   if (btn.disabled) return;
   selectedCount = Number(btn.dataset.count);
   document.querySelectorAll("[data-count]").forEach(b => b.classList.toggle("selected", b === btn));
+}));
+document.querySelectorAll("[data-answer-difficulty]").forEach(btn => btn.addEventListener("click", () => {
+  settings.answerDifficulty = btn.dataset.answerDifficulty;
+  applySettings();
+  saveSettings();
 }));
 document.querySelectorAll("[data-view]").forEach(btn => btn.addEventListener("click", () => showScreen(btn.dataset.view)));
 $("start-btn").addEventListener("click", () => begin());

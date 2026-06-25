@@ -9,7 +9,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="styles.css?v=2.1.1">
+  <link rel="stylesheet" href="styles.css?v=2.2.0">
 </head>
 <body>
   <div class="page-shell">
@@ -26,7 +26,7 @@
           <button class="nav-btn" type="button" data-view="progress"><span aria-hidden="true">▥</span><span>Progression</span></button>
           <button class="nav-btn" type="button" data-view="sheets"><span aria-hidden="true">▤</span><span>Fiches</span></button>
         </nav>
-        <span class="version-badge">v2.1.1</span>
+        <span class="version-badge">v2.2.0</span>
         <div class="best-score" title="Meilleur score enregistré sur cet appareil">
           <span aria-hidden="true">🏆</span>
           <span>Record <strong id="best-score">—</strong></span>
@@ -79,6 +79,16 @@
                 <button type="button" data-count="40">40 <small>Grand tour</small></button>
                 <button type="button" data-count="80">80 <small>Intégrale</small></button>
                 <button type="button" data-count="160">160 <small>Collection</small></button>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Difficulté des propositions</legend>
+              <p class="field-help">Règle seulement les mauvaises réponses : plus le niveau monte, plus les pièges ressemblent à de vraies réponses d'atelier.</p>
+              <div class="answer-difficulty-picker" role="group" aria-label="Difficulté des propositions de réponse">
+                <button type="button" data-answer-difficulty="normal">Standard <small>QCM clair</small></button>
+                <button class="selected" type="button" data-answer-difficulty="hard">Difficile <small>Pièges proches</small></button>
+                <button type="button" data-answer-difficulty="expert">Expert <small>Même thème</small></button>
               </div>
             </fieldset>
 
@@ -177,7 +187,7 @@
       <form method="dialog">
         <div class="dialog-header">
           <div>
-            <p class="eyebrow">VéloQuiz v2.1.1</p>
+            <p class="eyebrow">VéloQuiz v2.2.0</p>
             <h2 id="settings-title">Paramètres</h2>
           </div>
           <button class="dialog-close" value="close" aria-label="Fermer les paramètres">×</button>
@@ -200,6 +210,22 @@
               <span class="option-icon">▰</span><span><strong>Ordinateur</strong><small>Affichage large</small></span><span class="radio-mark"></span>
             </label>
           </div>
+        </fieldset>
+
+        <fieldset class="settings-group compact-settings">
+          <legend>Difficulté QCM</legend>
+          <label class="switch-row radio-row">
+            <span><strong>Standard</strong><small>Les propositions restent simples et lisibles</small></span>
+            <input type="radio" name="answer-difficulty-setting" value="normal"><span class="radio-dot"></span>
+          </label>
+          <label class="switch-row radio-row">
+            <span><strong>Difficile</strong><small>Ajoute des pièges plus proches du sujet</small></span>
+            <input type="radio" name="answer-difficulty-setting" value="hard"><span class="radio-dot"></span>
+          </label>
+          <label class="switch-row radio-row">
+            <span><strong>Expert</strong><small>Les mauvaises réponses viennent surtout du même thème</small></span>
+            <input type="radio" name="answer-difficulty-setting" value="expert"><span class="radio-dot"></span>
+          </label>
         </fieldset>
 
         <fieldset class="settings-group compact-settings">
@@ -233,7 +259,7 @@
 
     <footer>Quiz créé à partir du <em>Guide Technique Vélo — Synthèse technique 2025</em>.</footer>
   </div>
-  <script src="app.js?v=2.1.1"></script>
+  <script src="app.js?v=2.2.0"></script>
 </body>
 </html>
 
