@@ -39,7 +39,7 @@ const questions = [
   {category:"Électricité", icon:"ϟ", level:"Expert", page:11, q:"À pleine charge, quelle tension atteint une batterie 36 V composée de 10 cellules en série (10S) ?", choices:["42 V","36 V","30 V","54,6 V"], answer:"42 V", why:"Chaque groupe atteint 4,2 V à pleine charge : 10 × 4,2 V = 42 V."},
   {category:"Électricité", icon:"ϟ", level:"Fondamentaux", page:12, q:"Que fait le contrôleur d'un moteur BLDC ?", choices:["Il convertit le courant continu en courant alternatif triphasé","Il transforme mécaniquement le couple en tension","Il recharge la batterie en permanence","Il remplace le capteur de pédalage"], answer:"Il convertit le courant continu en courant alternatif triphasé", why:"Le contrôleur alimente les bobinages du moteur BLDC en convertissant le courant continu de la batterie."},
   {category:"Électricité", icon:"ϟ", level:"Atelier", page:12, q:"À quoi sert la PWM dans un contrôleur VAE ?", choices:["À ajuster efficacement la puissance par impulsions","À équilibrer mécaniquement la roue","À mesurer la pression des pneus","À refroidir directement les cellules"], answer:"À ajuster efficacement la puissance par impulsions", why:"La modulation de largeur d'impulsion fait varier la durée des impulsions pour régler précisément la puissance sans pertes résistives inutiles."},
-  {category:"Électricité", icon:"ϟ", level:"Entretien", page:12, q:"Quelle fonction du BMS protège une cellule qui dépasse 4,2 V ?", choices:["La protection contre la surcharge","La protection contre la décharge profonde","Le calcul de cadence","La modulation PWM"], answer:"La protection contre la surcharge", why:"Le BMS coupe la charge lorsqu'une cellule dépasse 4,2 V ; il gère aussi équilibrage, température et décharge profonde."},
+  {category:"Électricité", icon:"ϟ", level:"Entretien", page:12, q:"Quelle fonction du BMS protège une cellule qui dépasse 4,2 V ?", choices:["La protection contre la surcharge","La protection contre la décharge profonde","L'équilibrage des cellules","La surveillance de température"], answer:"La protection contre la surcharge", why:"Le BMS coupe la charge lorsqu'une cellule dépasse 4,2 V ; il gère aussi équilibrage, température et décharge profonde."},
 
   {category:"Serrage", icon:"🔧", level:"Atelier", page:13, q:"Quel couple générique est indiqué pour des pédales à filetage standard ?", choices:["35 à 40 N·m","4 à 6 N·m","12 à 14 N·m","2 à 4 N·m"], answer:"35 à 40 N·m", why:"Le guide indique 35 à 40 N·m pour les pédales. Les préconisations du fabricant restent prioritaires."},
   {category:"Serrage", icon:"🔧", level:"Atelier", page:13, q:"Quel couple est indiqué pour un axe traversant ?", choices:["12 à 15 N·m","2 à 4 N·m","35 à 50 N·m","5 à 7 N·m"], answer:"12 à 15 N·m", why:"La valeur générique fournie pour un thru-axle est de 12 à 15 N·m."},
@@ -276,6 +276,14 @@ const visualQuestions = new Map([
   ["Comment corriger un patin qui grince tout en restant bien aligné sur la jante ?", "brakepad"],
   ["Quelle différence distingue le voile du saut d'une roue ?", "wheel"],
 ]);
+const curatedAnswerChoices = new Map([
+  ["Quelle fonction du BMS protège une cellule qui dépasse 4,2 V ?", [
+    "La protection contre la surcharge",
+    "La protection contre la décharge profonde",
+    "L'équilibrage des cellules",
+    "La surveillance de température"
+  ]]
+]);
 const $ = (id) => document.getElementById(id);
 const screens = {home:$("screen-home"), progress:$("screen-progress"), sheets:$("screen-sheets"), quiz:$("screen-quiz"), result:$("screen-result")};
 const answerDifficultyLabels = {normal:"QCM standard", hard:"QCM difficile", expert:"QCM expert"};
@@ -318,39 +326,58 @@ function uniqueChoices(candidates, item) {
   });
 }
 
-function collectDistractors(pool, item, includeChoices = true) {
-  return uniqueChoices(pool.flatMap(question => {
-    const values = [question.answer];
-    if (includeChoices) values.push(...question.choices.filter(choice => choice !== question.answer));
-    return values;
-  }), item);
+function choiceKind(value) {
+  const text = String(value).trim();
+  const words = text.split(/\s+/).filter(Boolean).length;
+  if (/[=×÷+]/.test(text)) return "formula";
+  if (/\d/.test(text) && words <= 6) return "value";
+  if (words <= 3) return "term";
+  return "sentence";
+}
+
+function technicalTokens(value) {
+  return normalizedText(value)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\p{L}\p{N}\s-]/gu, " ")
+    .split(/\s+/)
+    .filter(word => word.length >= 4 && !["dans", "avec", "pour", "plus", "contre", "quelle", "quel", "peut", "sont", "cette", "guide", "velo"].includes(word));
+}
+
+function isCompatibleDistractor(choice, item) {
+  const answerKind = choiceKind(item.answer);
+  const candidateKind = choiceKind(choice);
+  if (answerKind === candidateKind) return true;
+  if (answerKind === "sentence") return candidateKind === "sentence";
+  if (answerKind === "value") return candidateKind === "value";
+  if (answerKind === "formula") return candidateKind === "formula";
+  return candidateKind === "term";
+}
+
+function rankedDistractors(item, sourceQuestions) {
+  const contextTokens = new Set(technicalTokens(`${item.q} ${item.answer} ${item.why}`));
+  return uniqueChoices(sourceQuestions.flatMap(question => question.choices), item)
+    .filter(choice => isCompatibleDistractor(choice, item))
+    .map(choice => {
+      const shared = technicalTokens(choice).filter(token => contextTokens.has(token)).length;
+      const sameLevel = sourceQuestions.find(question => question.choices.includes(choice))?.level === item.level ? 1 : 0;
+      return {choice, score: shared * 3 + sameLevel};
+    })
+    .filter(entry => entry.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map(entry => entry.choice);
 }
 
 function buildAnswerChoices(item) {
+  if (curatedAnswerChoices.has(item.q)) return shuffle(curatedAnswerChoices.get(item.q));
   if (settings.answerDifficulty === "normal") return shuffle(item.choices);
 
   const originalWrong = uniqueChoices(item.choices.filter(choice => choice !== item.answer), item);
   const sameCategory = questions.filter(question => question !== item && question.category === item.category);
-  const sameLevel = sameCategory.filter(question => question.level === item.level);
-  const allOther = questions.filter(question => question !== item);
-  const closeDistractors = settings.answerDifficulty === "expert"
-    ? [
-        ...collectDistractors(sameLevel, item, true),
-        ...collectDistractors(sameCategory, item, true),
-        ...originalWrong,
-        ...collectDistractors(allOther, item, false)
-      ]
-    : [
-        ...collectDistractors(sameCategory, item, false),
-        ...collectDistractors(sameCategory, item, true),
-        ...originalWrong,
-        ...collectDistractors(allOther, item, false)
-      ];
-
-  const wrong = uniqueChoices(closeDistractors, item);
+  const closeDistractors = rankedDistractors(item, sameCategory);
   const selectedWrong = settings.answerDifficulty === "expert"
-    ? wrong.slice(0, 3)
-    : uniqueChoices([...wrong.slice(0, 2), ...originalWrong], item).slice(0, 3);
+    ? uniqueChoices([...closeDistractors.slice(0, 1), ...originalWrong], item).slice(0, 3)
+    : uniqueChoices([...originalWrong, ...closeDistractors], item).slice(0, 3);
 
   return shuffle([item.answer, ...selectedWrong].slice(0, 4));
 }
